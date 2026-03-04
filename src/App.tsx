@@ -1,25 +1,34 @@
-import FlightTable from "./components/FlightTable";
-import { useChatGPTData } from "./hooks/useChatGPTData";
-
-type ToolData = {
-  title: string;
-  flights: any[];
-  bookingUrl: string;
-};
+import { useMCPData } from "./hooks/useChatGPTData";
+import FlightList from "./components/FlightList";
 
 export default function App() {
-  const data = useChatGPTData<ToolData>();
+  const data = useMCPData();
 
-  if (!data) return <div>Loading flights...</div>;
+  if (!data) {
+    return (
+      <div className="p-6 text-center">
+        Loading flight results...
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>{data.title}</h1>
+    <div className="p-6 max-w-3xl mx-auto font-sans">
+      <h1 className="text-2xl font-bold mb-4">
+        ✈️ {data.from} → {data.to}
+      </h1>
 
-      <FlightTable
-        flights={data.flights}
-        bookingUrl={data.bookingUrl}
-      />
+      <FlightList flights={data.flights} />
+
+      <a
+        href={data.bookingUrl}
+        target="_blank"
+        className="block mt-6"
+      >
+        <button className="bg-black text-white px-4 py-2 rounded-lg">
+          View All Results
+        </button>
+      </a>
     </div>
   );
 }
